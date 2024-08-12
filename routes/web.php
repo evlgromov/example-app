@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProjectsController;
+use App\Http\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
@@ -12,8 +13,10 @@ Route::get('/', fn() => inertia('Page/Home'))->middleware('auth');
 /**
  * Пользователи
  */
-Route::get('/login/', [UserController::class, 'login'])->name('login');
-Route::post('/login/', [UserController::class, 'loginPost']);
+Route::withoutMiddleware(Authenticate::class)->group(function () {
+    Route::get('/login/', [UserController::class, 'login'])->name('login');
+    Route::post('/login/', [UserController::class, 'loginPost']);
+});
 Route::middleware('auth')->group(function () {
     Route::post('/logout/', [UserController::class, 'logout']);
     Route::resource('users', UserController::class)->scoped(['user' => 'username']);
