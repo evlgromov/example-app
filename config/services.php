@@ -5,5 +5,9 @@
  */
 
 return [
-    // ...
+    'dummy_json' => [
+        'domain' => env('DUMMY_JSON_DOMAIN'),
+        'username' => env('DUMMY_JSON_USERNAME'),
+        'password' => env('DUMMY_JSON_PASSWORD'),
+    ]
 ];

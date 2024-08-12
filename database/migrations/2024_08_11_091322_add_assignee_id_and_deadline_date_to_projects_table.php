@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('projects', function (Blueprint $table) {
             $table->integer('assignee_id')->nullable()->after('is_active');
-            $table->integer('deadline_date')->nullable()->after('assignee_id');
+            $table->date('deadline_date')->nullable()->after('assignee_id');
         });
     }
 
