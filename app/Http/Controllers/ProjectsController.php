@@ -13,7 +13,26 @@ class ProjectsController extends Controller
      */
     public function index()
     {
-        return "Список проектов";
+        $projects = [
+          [
+              'id' => 1,
+              'user_id' => 2,
+              'name' => 'Project #1',
+              'is_active' => true,
+              'created_at' => "2024-08-13 08:00:00",
+              'assignee_id' => null,
+              'deadline_date' => "2024-08-15",
+          ], [
+                'id' => 2,
+                'user_id' => 2,
+                'name' => 'Project #2',
+                'is_active' => true,
+                'created_at' => "2024-08-13 08:00:00",
+                'assignee_id' => null,
+                'deadline_date' => "2024-08-15",
+            ]
+        ];
+        return view('projects.index', compact('projects'));
     }
 
     /**
@@ -23,7 +42,7 @@ class ProjectsController extends Controller
     */
     public function create()
     {
-        return "Форма создания проекта";
+        return view('projects.create');
     }
 
     /**
@@ -43,7 +62,17 @@ class ProjectsController extends Controller
      */
     public function show(string $id)
     {
-        return "Страница проекта";
+        $project = [
+            'id' => 1,
+            'user_id' => 2,
+            'name' => 'Project #1',
+            'is_active' => true,
+            'created_at' => "2024-08-13 08:00:00",
+            'assignee_id' => null,
+            'deadline_date' => "2024-08-15",
+        ];
+
+        return view('projects.show', compact('project'));
     }
 
     /**
@@ -53,7 +82,17 @@ class ProjectsController extends Controller
      */
     public function edit(string $id)
     {
-        return "Форма редактирования проекта";
+        $project = [
+            'id' => 1,
+            'user_id' => 2,
+            'name' => 'Project #1',
+            'is_active' => true,
+            'created_at' => "2024-08-13 08:00:00",
+            'assignee_id' => null,
+            'deadline_date' => "2024-08-15",
+        ];
+
+        return view('projects.edit', compact('project'));
     }
 
     /**
