@@ -5,10 +5,6 @@
 @section('content')
     <h2>Просмотр проекта</h2>
 
-    @if(empty($projects))
-        Нет ни одного проекта
-    @else
-
     <table>
         <tr>
             <th>ID</th>
@@ -25,6 +21,4 @@
             <td>{{ $project['deadline_date'] }}</td>
         </tr>
     </table>
-
-    @endif
 @endsection

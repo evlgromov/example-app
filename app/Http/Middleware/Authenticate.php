@@ -15,10 +15,10 @@ class Authenticate
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if($request->access !== 'yes') {
-            abort(403);
-        }
-
+        //if($request->access !== 'yes') {
+        //    abort(403);
+        //}
+        //
         return $next($request);
     }
 }
