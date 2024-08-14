@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
 use Illuminate\Http\Request;
 
 class ProjectsController extends Controller
@@ -13,25 +14,8 @@ class ProjectsController extends Controller
      */
     public function index()
     {
-        $projects = [
-          [
-              'id' => 1,
-              'user_id' => 2,
-              'name' => 'Project #1',
-              'is_active' => true,
-              'created_at' => "2024-08-13 08:00:00",
-              'assignee_id' => null,
-              'deadline_date' => "2024-08-15",
-          ], [
-                'id' => 2,
-                'user_id' => 2,
-                'name' => 'Project #2',
-                'is_active' => true,
-                'created_at' => "2024-08-13 08:00:00",
-                'assignee_id' => null,
-                'deadline_date' => "2024-08-15",
-            ]
-        ];
+        $projects = Project::all();
+
         return view('projects.index', compact('projects'));
     }
 
@@ -62,15 +46,7 @@ class ProjectsController extends Controller
      */
     public function show(string $id)
     {
-        $project = [
-            'id' => 1,
-            'user_id' => 2,
-            'name' => 'Project #1',
-            'is_active' => true,
-            'created_at' => "2024-08-13 08:00:00",
-            'assignee_id' => null,
-            'deadline_date' => "2024-08-15",
-        ];
+        $project = Project::find($id);
 
         return view('projects.show', compact('project'));
     }
@@ -82,15 +58,7 @@ class ProjectsController extends Controller
      */
     public function edit(string $id)
     {
-        $project = [
-            'id' => 1,
-            'user_id' => 2,
-            'name' => 'Project #1',
-            'is_active' => true,
-            'created_at' => "2024-08-13 08:00:00",
-            'assignee_id' => null,
-            'deadline_date' => "2024-08-15",
-        ];
+        $project = Project::find($id);
 
         return view('projects.edit', compact('project'));
     }
