@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -25,6 +26,16 @@ class User extends Authenticatable
         'role',
         'is_blocked'
     ];
+
+    public function ownedProjects(): HasMany
+    {
+        return $this->hasMany(Project::class, 'user_id');
+    }
+
+    public function assignedProjects(): HasMany
+    {
+        return $this->hasMany(Project::class, 'assignee_id');
+    }
 
     protected function casts(): array
     {
