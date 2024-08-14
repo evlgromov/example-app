@@ -3,11 +3,6 @@
 @section('page.title', 'Список проектов')
 
 @section('content')
-    <x-alert type="warning">
-        <x-alert-title>Заголовок</x-alert-title>
-        <x-alert-body>Текст сообщения</x-alert-body>
-    </x-alert>
-
     <h2>Список проектов</h2>
 
     @if(empty($projects))
