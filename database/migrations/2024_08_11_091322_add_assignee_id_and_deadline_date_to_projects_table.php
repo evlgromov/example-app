@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('projects', function (Blueprint $table) {
-            $table->integer('assignee_id')->nullable()->after('is_active');
-            $table->date('deadline_date')->nullable()->after('assignee_id');
+            $table->integer('assignee_id')->nullable();
+            $table->date('deadline_date')->nullable();
         });
     }
 

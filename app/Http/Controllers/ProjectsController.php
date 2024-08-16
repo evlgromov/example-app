@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Project\ProjectStoreRequest;
+use App\Http\Requests\Project\ProjectUpdateRequest;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class ProjectsController extends Controller
 {
@@ -26,7 +30,9 @@ class ProjectsController extends Controller
     */
     public function create()
     {
-        return view('projects.create');
+        $users = User::where('role', 'customer')->get();
+
+        return view('projects.create', compact('users'));
     }
 
     /**
@@ -34,9 +40,19 @@ class ProjectsController extends Controller
      *
      * POST /projects
      */
-    public function store(Request $request)
+    public function store(ProjectStoreRequest $request)
     {
-        return "Сохранение созданного проекта";
+        $data = $request->validated();
+
+        Project::create([
+            'name' => $data['name'],
+            'assignee_id' => $data['assignee_id'],
+            'deadline_date' => $data['deadline_date'],
+            'user_id' => auth()->id(),
+            'is_active' => (bool) $request->boolean('is_active'),
+        ]);
+
+        return Redirect::route('projects.index');
     }
 
     /**
@@ -59,8 +75,9 @@ class ProjectsController extends Controller
     public function edit(string $id)
     {
         $project = Project::find($id);
+        $users = User::where('role', 'customer')->get();
 
-        return view('projects.edit', compact('project'));
+        return view('projects.edit', compact('project', 'users'));
     }
 
     /**
@@ -68,9 +85,18 @@ class ProjectsController extends Controller
      *
      * PUT /users/{username}
      */
-    public function update(Request $request, string $id)
+    public function update(ProjectUpdateRequest $request, string $id)
     {
-        return "Сохранение редактируемого проекта";
+        $data = $request->validated();
+
+        Project::find($id)->update([
+            'name' => $data['name'],
+            'assignee_id' => $data['assignee_id'],
+            'deadline_date' => $data['deadline_date'],
+            'is_active' => (bool) $request->boolean('is_active'),
+        ]);
+
+        return Redirect::route('projects.index');
     }
 
     /**
@@ -80,6 +106,8 @@ class ProjectsController extends Controller
      */
     public function destroy(string $id)
     {
-        return "Удаление проекта";
+        Project::find($id)->delete();
+
+        return Redirect::route('projects.index');
     }
 }
