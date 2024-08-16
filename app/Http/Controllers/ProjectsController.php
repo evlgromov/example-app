@@ -49,7 +49,7 @@ class ProjectsController extends Controller
             'assignee_id' => $data['assignee_id'],
             'deadline_date' => $data['deadline_date'],
             'user_id' => auth()->id(),
-            'is_active' => (bool) $request->boolean('is_active'),
+            'is_active' => $request->boolean('is_active'),
         ]);
 
         return Redirect::route('projects.index');
