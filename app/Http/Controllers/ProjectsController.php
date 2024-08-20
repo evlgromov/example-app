@@ -6,7 +6,7 @@ use App\Http\Requests\Project\ProjectStoreRequest;
 use App\Http\Requests\Project\ProjectUpdateRequest;
 use App\Models\Project;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 
 class ProjectsController extends Controller
@@ -18,9 +18,11 @@ class ProjectsController extends Controller
      */
     public function index()
     {
-        $projects = auth()->user()->ownedProjects;
+        Gate::authorize('view', Project::class);
 
-        return view('projects.index', compact('projects'));
+        $projects = Project::all();
+
+        return view('projects.index', ['projects' => $projects]);
     }
 
     /**
@@ -30,9 +32,11 @@ class ProjectsController extends Controller
     */
     public function create()
     {
+        Gate::authorize('create', Project::class);
+
         $users = User::where('role', 'customer')->get();
 
-        return view('projects.create', compact('users'));
+        return view('projects.create', ['users' => $users]);
     }
 
     /**
@@ -42,6 +46,8 @@ class ProjectsController extends Controller
      */
     public function store(ProjectStoreRequest $request)
     {
+        Gate::authorize('create', Project::class);
+
         $data = $request->validated();
 
         Project::create([
@@ -49,7 +55,7 @@ class ProjectsController extends Controller
             'assignee_id' => $data['assignee_id'],
             'deadline_date' => $data['deadline_date'],
             'user_id' => auth()->id(),
-            'is_active' => $request->boolean('is_active'),
+            'is_active' => (bool) $request->boolean('is_active'),
         ]);
 
         return Redirect::route('projects.index');
@@ -60,11 +66,11 @@ class ProjectsController extends Controller
      *
      * GET /projects/{id}
      */
-    public function show(string $id)
+    public function show(Project $project)
     {
-        $project = Project::find($id);
+        Gate::authorize('view', $project);
 
-        return view('projects.show', compact('project'));
+        return view('projects.show', ['project' => $project]);
     }
 
     /**
@@ -72,12 +78,13 @@ class ProjectsController extends Controller
      *
      * GET /projects/{id}/edit
      */
-    public function edit(string $id)
+    public function edit(Project $project)
     {
-        $project = Project::find($id);
+        Gate::authorize('update', $project);
+
         $users = User::where('role', 'customer')->get();
 
-        return view('projects.edit', compact('project', 'users'));
+        return view('projects.edit', ['project' => $project, 'users' => $users]);
     }
 
     /**
@@ -85,11 +92,13 @@ class ProjectsController extends Controller
      *
      * PUT /users/{username}
      */
-    public function update(ProjectUpdateRequest $request, string $id)
+    public function update(ProjectUpdateRequest $request, Project $project)
     {
+        Gate::authorize('update', $project);
+
         $data = $request->validated();
 
-        Project::find($id)->update([
+        $project->update([
             'name' => $data['name'],
             'assignee_id' => $data['assignee_id'],
             'deadline_date' => $data['deadline_date'],
@@ -104,9 +113,11 @@ class ProjectsController extends Controller
      *
      * DELETE /projects/{id}
      */
-    public function destroy(string $id)
+    public function destroy(Project $project)
     {
-        Project::find($id)->delete();
+        Gate::authorize('delete', $project);
+
+        $project->delete();
 
         return Redirect::route('projects.index');
     }
