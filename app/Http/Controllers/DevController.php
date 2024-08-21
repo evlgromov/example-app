@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
 class DevController extends Controller
@@ -103,5 +105,48 @@ class DevController extends Controller
         ]);
 
         return $project;
+    }
+
+    /**
+     *  Получаем три последних проекта; если текущий пользователь авторизован, то те, которые принадлежат текущему пользователю; если не авторизован — то кому-угодно.
+     */
+
+    public function getMyLatestThree(): JsonResponse
+    {
+        $query = Auth::check()
+            ? Auth::user()->ownedProjects()
+            : Project::all();
+
+        $projects = $query
+            ->orderByDesc('id')
+            ->limit(3)
+            ->get()
+            ->toArray();
+
+        return response()->json($projects);
+    }
+
+    /**
+     *  Получаем список пользователей (их username) и кол-во проектов у каждого.
+     */
+
+    public function usersProjects(): JsonResponse
+    {
+        $projects = User::select('username')
+            ->withCount('ownedProjects as projects_count')
+            ->get();
+
+        return response()->json($projects);
+    }
+
+    /**
+     *  Получаем кол-во проектов с истекшим дедлайном.
+     */
+
+    public function getExpiredProjectsCount(): JsonResponse
+    {
+        $projects = Project::expired()->get();
+
+        return response()->json($projects);
     }
 }
